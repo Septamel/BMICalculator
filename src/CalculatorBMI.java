@@ -8,41 +8,83 @@
  *
  * @author Rahma_Izza
  */
-import java.util.Scanner;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+ 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class CalculatorBMI 
-{
-  
-  static void CalculateBMI(float weight, float height) 
-  {
-    
-    float BMI = ( 100 * 100 * weight ) / ( height * height ); 
-    // multiplying 100 * 100 to convert cm to m
-    
-    System.out.println("\nYour BMI value: " + BMI);
-    
-    if(BMI < 18.5)
-      System.out.println("You are underweight!");
-    else if(BMI < 25)
-      System.out.println("You are normal:)");
-    else if(BMI < 30)
-      System.out.println("You are overweight!");
-    else
-      System.out.println("You are obese!");
-    
-  } 
-  
-  public static void main(String[] args) 
-  {
-    Scanner sc = new Scanner(System.in);
-    
-    System.out.println("BMI CALCULATOR");
-    System.out.print("Masukkan Berat Badanmu (kg): ");
-    float berat = sc.nextFloat();
-    System.out.print("Masukkan Tinggi Badanmu (cm): ");
-    float tinggi = sc.nextFloat();
-    
-    CalculateBMI(berat, tinggi);
-  }
-  
+public class CalculatorBMI extends JFrame {
+    private JTextField weightField, heightField, resultField;
+
+    public CalculatorBMI() {
+        setTitle("BMI Calculator");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(4, 2, 10, 10)); // 4 rows, 2 columns, with gaps
+
+        // Create components
+        JLabel weightLabel = new JLabel("Weight (kg): ");
+        weightField = new JTextField(10);
+
+        JLabel heightLabel = new JLabel("Height (m): ");
+        heightField = new JTextField(10);
+
+        JButton calculateButton = new JButton("Calculate BMI");
+
+        JLabel resultLabel = new JLabel("Your BMI: ");
+        resultField = new JTextField(10);
+        resultField.setEditable(false); // Make it read-only
+
+        // Add components to the frame
+        add(weightLabel);
+        add(weightField);
+        add(heightLabel);
+        add(heightField);
+        add(new JLabel()); // Empty label for spacing
+        add(calculateButton);
+        add(resultLabel);
+        add(resultField);
+
+        // Add action listener to the calculate button
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateBMI();
+            }
+        });
+
+        pack();
+        setLocationRelativeTo(null); // Center the frame on the screen
+        setVisible(true);
+    }
+
+    private void calculateBMI() {
+        try {
+            double weight = Double.parseDouble(weightField.getText());
+            double height = Double.parseDouble(heightField.getText());
+
+            double bmi = weight / (height * height);
+
+            // Display BMI in the result field
+            resultField.setText(String.format("%.2f", bmi));
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter valid weight and height.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new CalculatorBMI();
+            }
+        });
+    }
 }
